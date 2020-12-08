@@ -21,21 +21,18 @@ insertHelp (h,t,h(key),(Value(key,v)))
  
 end;
 
+
+fun get hash (table:'a HashTable) (key:int)=
+let
 fun getkeyval (entry:'a HashTableEntry ):int*'a=
 case entry of
 Value(x,y)=>(x,y);
 
-fun getrec hash (table:'a HashTable) (key:int) (ogkey:int)=if(#1 (getkeyval (List.nth (table, (hash key))))=ogkey) then #2 (getkeyval (List.nth (table, (hash key)))) else getrec hash table (hash key) ogkey;
+fun getrec hash (table:'a HashTable) (key:int) (ogkey:int)=if(#1 (getkeyval (List.nth (table, (hash key))))=ogkey) then Value (getkeyval (List.nth (table, (hash key)))) else getrec hash table (hash key) ogkey;
+in
+getrec hash table key key
+end;
 
-fun get hash (table:'a HashTable) (key:int)=getrec hash table key key;
-val table=create 9;
-fun h x:int= (x mod 9)+1;
-val table=insert h table (2,"test");
-(get h table 2);
-val table=insert h table (1,"test2");
-(get h table 1);
-val table=insert h table (10,"test3");
-(get h table 10);
 
 fun remove hash (table:'a HashTable) key:'a HashTable=
 let
